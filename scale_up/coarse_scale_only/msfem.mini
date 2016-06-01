@@ -3,6 +3,6 @@ include ../scaleup.mini
 
 [grids]
 micro_cells_per_macrocell_dim = 8
-macro_cells_per_dim = 04, 05, 06, 08, 10, 13, 16, 20, 25, 32, 40, 51 | expand p
+macro_cells_per_dim =     5, 10, 15, 20, 25, 30, 35, 40, 45, 50 | expand p
 overlap = 1
 

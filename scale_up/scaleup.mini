@@ -1,10 +1,11 @@
-__name = refine_{power}
-int = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 | expand p
-power  = 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048 | expand p
+__name = refine_{private.power}
+[private]
+int = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 | expand p
+power  = 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000 | expand p
 
 [global]
 # directory to save the data output
-datadir = data_run_{power}
+datadir = data_run_{private.power}
 output_walltime = 1
 vtk_output = 0
 skip_error = 0
@@ -30,7 +31,7 @@ name = "Synthetic"
 # LOG_NONE = 1, LOG_ERR = 2, LOG_INFO = 4,LOG_DEBUG = 8,LOG_CONSOLE = 16,LOG_FILE = 32
 # # --> LOG_ERR | LOG_INFO | LOG_DEBUG | LOG_FILE = 46
 # # ANY odd number will disable ALL logging
-level = 62
+level = 22
 file = msfem.log
 
 # logging directory relative to datadir
