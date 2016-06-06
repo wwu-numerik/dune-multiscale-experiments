@@ -1,14 +1,13 @@
-__name = refine_{private.power}
 [private]
 int = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 | expand p
 power  = 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000 | expand p
 
 [global]
 # directory to save the data output
-datadir = data_run_{private.power}
 output_walltime = 1
 vtk_output = 0
-skip_error = 0
+skip_error = 1
+
 [msfem]
 # number of oversampling layers (layers of fine grid elements)
 oversampling_layers = 0
