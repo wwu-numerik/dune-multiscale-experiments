@@ -21,7 +21,7 @@ fem_comparison = 1
 #bicgstab.ilut,bicgstab.amg.ssor,bicgstab.amg,bicgstab.amg.ilu0 or umfpack
 local_solver = umfpack
 local_solver_verbose = 0
-coarse_solver = bicgstab.amg.ssor
+coarse_solver = bicgstab.amg.ilu0
 
 [problem]
 name = "Synthetic"
