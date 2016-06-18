@@ -1,21 +1,23 @@
-#!/bin/bash
+from __future__ import division
+
+tpl_str='''#!/bin/bash
 ##
 ## optional: energy policy tags
 #@ energy_policy_tag = NONE
 # DO NOT USE environment = COPY_ALL
 #@ job_type = MPICH
-#@ class = {{ 'test' if NODES < 17 else 'general' }}
-#@ node = {{ NODES }}
+#@ class = {{ 'test' if nodes < 17 else 'general' }}
+#@ node = {{ nodes }}
 #@ island_count=1
 # other example
 #@ tasks_per_node = 28
 #@ wall_clock_limit = 0:2:30
 ##                    1 h 20 min 30 secs
-#@ job_name = msfem_{{ MACRO }}x{{ MICRO }}_{{ NODES }}N_1C
+#@ job_name = msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C
 #@ network.MPI = sn_all,not_shared,us
 #@ initialdir = $(home)/multiscale-build-phase2/dune-multiscale
-#@ output = job_msfem_{{ MACRO }}x{{ MICRO }}_{{ NODES }}N_1C_$(jobid).out
-#@ error = job_msfem_{{ MACRO }}x{{ MICRO }}_{{ NODES }}N_1C_$(jobid).err
+#@ output = job_msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C_$(jobid).out
+#@ error = job_msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C_$(jobid).err
 #@ notification=always
 #@ notify_user=rene.milk@wwu.de
 #@ queue
@@ -29,7 +31,27 @@ source $HOME/.modules
 BIN=$HOME/multiscale-build-phase2/dune-multiscale/elliptic_msfem
 
 
-OPT="$HOME/dune-multiscale-super/dune-multiscale/parameter_files/supermuc_test \
--global.datadir $HOME/multiscale-build-phase2/dune-multiscale/speedup_n{{ POWER2_RANKS }}_{{ MACRO }}x{{ MICRO }}_T1 \
+OPT="$HOME/main_multiscale/experiments/parameter_files/supermuc_test.ini \
+-global.datadir $HOME/multiscale-build-phase2/dune-multiscale/speedup_n{{ procs }}_{{ MACRO }}x{{ MICRO }}_T1 \
 -grids.macro_cells_per_dim {{ MACRO }} -grids.micro_cells_per_macrocell_dim {{ MICRO }} -threading.max_count 1 "
-mpirun -n {{ POWER2_RANKS }} $BIN ${OPT}
+mpirun -n {{ procs }} $BIN ${OPT}
+'''
+
+from jinja2 import Template
+tpl=Template(tpl_str)
+
+MACRO=64
+MICRO=8
+def output_run(i):
+  nodes = int(pow(2,i))
+  procs = 28 * nodes
+  #print('nodes {} - procs {}'.format(nodes, procs))
+  fn = 'node_{}.submit'.format(nodes)
+  open(fn, 'wt').write(tpl.render(**locals()))
+  print('llsubmit {}'.format(fn))
+  print('P{} {}'.format(nodes, procs))
+
+
+for i in range(5,10):
+  output_run(i)
+
