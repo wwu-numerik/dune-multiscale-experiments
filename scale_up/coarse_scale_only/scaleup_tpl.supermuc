@@ -1,48 +1,56 @@
 from __future__ import division
 
-tpl_str='''#!/bin/bash -l 
-#SBATCH --nodes={{ nodes }}
-#SBATCH --ntasks-per-node=12
-#SBATCH --ntasks={{ procs  }}
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=23gb 
-#SBATCH --time=00:30:00 
-#SBATCH --account=UniKoeln 
-#SBATCH --partition=mpi
-#SBATCH --constraint=[inca12*{{ nodes }}]
-#SBATCH --exclusive
-#SBATCH -o /scratch/rmilk/multiscale-build-icc/dune-multiscale/refine_{{ nodes }}.out
-#SBATCH -e /scratch/rmilk/multiscale-build-icc/dune-multiscale/refine_{{ nodes }}.err
-#SBATCH --mail-user=rmilk@uni-koeln.de
-#SBATCH --mail-type=end 
+tpl_str='''#!/bin/bash
+##
+## optional: energy policy tags
+#@ energy_policy_tag = NONE
+# DO NOT USE environment = COPY_ALL
+#@ job_type = MPICH
+#@ class = {{ 'test' if nodes < 17 else 'general' }}
+#@ node = {{ nodes }}
+#@ island_count=1
+# other example
+#@ tasks_per_node = 28
+#@ wall_clock_limit = 0:6:30
+##                    1 h 20 min 30 secs
+#@ job_name = msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C
+#@ network.MPI = sn_all,not_shared,us
+#@ initialdir = $(home)/multiscale-build-phase2/dune-multiscale
+#@ output = job_msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C_$(jobid).out
+#@ error = job_msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C_$(jobid).err
+#@ notification=always
+#@ notify_user=rene.milk@wwu.de
+#@ queue
+. /etc/profile
+. /etc/profile.d/modules.sh
+#setup of environment
+source $HOME/.modules
+#optional: 
+#module load mpi_pinning/hybrid_blocked
 
-source $HOME/.bashrc
-source $HOME/.modules.icc
-#for some reasong the above DOES NOT set below vars correctly
-export PATH=/home/rmilk/.local/bin:/home/rmilk/local/bin:$PATH
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/rmilk/local/lib
-cd /scratch/rmilk/multiscale-build-icc/dune-multiscale/
+BIN=$HOME/multiscale-build-phase2/dune-multiscale/elliptic_msfem
 
-BIN=/scratch/rmilk/multiscale-build-icc/dune-multiscale/elliptic_msfem
-OPT="/scratch/rmilk/multiscale-build-icc/dune-multiscale/refine_{{ nodes }}.ini"
-srun -n {{ procs }} -N {{ nodes }} $BIN ${OPT}
-push_notify "cheops refine_{{ nodes }} done"
+
+OPT="$HOME/main_multiscale/experiments/parameter_files/supermuc_test.ini \
+-global.datadir $HOME/multiscale-build-phase2/dune-multiscale/speedup_n{{ procs }}_{{ MACRO }}x{{ MICRO }}_T1 "
+
+mpirun -n {{ procs }} $BIN ${OPT}
 '''
 
 from jinja2 import Template
-from math import pow, ceil
-
 tpl=Template(tpl_str)
 
+MACRO=64
+MICRO=8
 def output_run(i):
-  procs = int(pow(3,i))
-  nodes = int(ceil(procs / 12))
+  nodes = int(pow(2,i))
+  procs = 28 * nodes
   #print('nodes {} - procs {}'.format(nodes, procs))
   fn = 'node_{}.submit'.format(nodes)
   open(fn, 'wt').write(tpl.render(**locals()))
-  print('sbatch {}'.format(fn))
+  print('llsubmit {}'.format(fn))
 
 
-for i in range(4,7):
+for i in range(5,10):
   output_run(i)
-#output_run(1)
+
