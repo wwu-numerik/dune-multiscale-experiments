@@ -5,7 +5,7 @@
 # DO NOT USE environment = COPY_ALL
 #@ job_type = MPICH
 #@ class = test
-#@ node = 10
+#@ node = 02
 #@ island_count=1
 # other example
 #@ tasks_per_node = 28
@@ -30,6 +30,6 @@ BIN=$HOME/multiscale-build-phase2/dune-multiscale/elliptic_msfem
 
 
 OPT="$HOME/dune-multiscale-super/dune-multiscale/parameter_files/supermuc_test \
--global.datadir $HOME/multiscale-build-phase2/dune-multiscale/speedup_n256_64x8_T1 \
--grids.macro_cells_per_dim 64 -grids.micro_cells_per_macrocell_dim 8 -threading.max_count 1 "
-mpirun -n 256 $BIN ${OPT}
+-global.datadir $HOME/multiscale-build-phase2/dune-multiscale/speedup_n056_32x4_T1 \
+-grids.macro_cells_per_dim 32 -grids.micro_cells_per_macrocell_dim 4 -threading.max_count 1 "
+mpirun -n 56 $BIN ${OPT}

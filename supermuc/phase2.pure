@@ -11,7 +11,7 @@ tpl_str='''#!/bin/bash
 #@ island_count=1
 # other example
 #@ tasks_per_node = 28
-#@ wall_clock_limit = 0:2:30
+#@ wall_clock_limit = 0:6:30
 ##                    1 h 20 min 30 secs
 #@ job_name = msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C
 #@ network.MPI = sn_all,not_shared,us
@@ -32,8 +32,8 @@ BIN=$HOME/multiscale-build-phase2/dune-multiscale/elliptic_msfem
 
 
 OPT="$HOME/main_multiscale/experiments/parameter_files/supermuc_test.ini \
--global.datadir $HOME/multiscale-build-phase2/dune-multiscale/speedup_n{{ procs }}_{{ MACRO }}x{{ MICRO }}_T1 \
--grids.macro_cells_per_dim {{ MACRO }} -grids.micro_cells_per_macrocell_dim {{ MICRO }} -threading.max_count 1 "
+-global.datadir $HOME/multiscale-build-phase2/dune-multiscale/speedup_n{{ procs }}_{{ MACRO }}x{{ MICRO }}_T1 "
+
 mpirun -n {{ procs }} $BIN ${OPT}
 '''
 
@@ -49,7 +49,6 @@ def output_run(i):
   fn = 'node_{}.submit'.format(nodes)
   open(fn, 'wt').write(tpl.render(**locals()))
   print('llsubmit {}'.format(fn))
-  print('P{} {}'.format(nodes, procs))
 
 
 for i in range(5,10):
