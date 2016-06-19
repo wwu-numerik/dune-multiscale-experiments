@@ -1,0 +1,12 @@
+include ../scaleup.mini
+__name = refine_msfem_{private.power}
+
+[global]
+# directory to save the data output
+datadir = data_msfem_run_{private.power}
+
+[grids]
+micro_cells_per_macrocell_dim = 8
+macro_cells_per_dim =     5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 75, 100, 120 | expand p
+overlap = 1
+
