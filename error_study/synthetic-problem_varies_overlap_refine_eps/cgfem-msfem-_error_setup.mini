@@ -1,6 +1,6 @@
 [global]
 # directory to save the data output
-datadir = data
+datadir = data_{grids.macro_cells_per_dim}_x_{grids.micro_cells_per_macrocell_dim}_Ov_{msfem.oversampling_layers}
 output_walltime = 1
 vtk_output = 0
 skip_error = 0
@@ -13,7 +13,7 @@ overlap = 1
 
 [msfem]
 # number of oversampling layers (layers of fine grid elements)
-oversampling_layers = 8
+oversampling_layers = 0, 8, 16, 32 | expand
 
 # VTK output for the solutions of the local problems
 local_corrections_vtk_output = 0
