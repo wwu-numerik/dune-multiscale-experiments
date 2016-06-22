@@ -1,5 +1,7 @@
 from __future__ import division
 
+from math import ceil
+
 tpl_str='''#!/bin/bash
 ##
 ## optional: energy policy tags
@@ -16,8 +18,8 @@ tpl_str='''#!/bin/bash
 #@ job_name = msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C
 #@ network.MPI = sn_all,not_shared,us
 #@ initialdir = $(home)/multiscale-build-phase2/dune-multiscale
-#@ output = job_msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C_$(jobid).out
-#@ error = job_msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C_$(jobid).err
+#@ output = scaleup_job_msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C_$(jobid).out
+#@ error = scaleup_job_msfem_{{ MACRO }}x{{ MICRO }}_{{ nodes }}N_1C_$(jobid).err
 #@ notification=always
 #@ notify_user=rene.milk@wwu.de
 #@ queue
@@ -31,8 +33,8 @@ source $HOME/.modules
 BIN=$HOME/multiscale-build-phase2/dune-multiscale/elliptic_msfem
 
 
-OPT="$HOME/main_multiscale/experiments/parameter_files/supermuc_test.ini \
--global.datadir $HOME/multiscale-build-phase2/dune-multiscale/speedup_n{{ procs }}_{{ MACRO }}x{{ MICRO }}_T1 "
+OPT="/home/hpc/pr94si/di73dez/main_multiscale/experiments/scale_up/coarse_scale_only/refine_msfem_{{ procs }}.ini \
+-global.datadir $HOME/multiscale-build-phase2/dune-multiscale/scaleup_n{{ procs }}_T1 "
 
 mpirun -n {{ procs }} $BIN ${OPT}
 '''
@@ -43,14 +45,14 @@ tpl=Template(tpl_str)
 MACRO=64
 MICRO=8
 def output_run(i):
-  nodes = int(pow(2,i))
-  procs = 28 * nodes
+  procs = i
+  nodes = int(ceil(procs / 12))
   #print('nodes {} - procs {}'.format(nodes, procs))
   fn = 'node_{}.submit'.format(nodes)
   open(fn, 'wt').write(tpl.render(**locals()))
   print('llsubmit {}'.format(fn))
 
 
-for i in range(5,10):
+for i in [125, 216, 343, 512, 729, 1000, 1331, 3375, 8000, 13824]:
   output_run(i)
 
