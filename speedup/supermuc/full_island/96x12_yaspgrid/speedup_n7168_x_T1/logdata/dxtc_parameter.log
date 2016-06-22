@@ -1,0 +1,30 @@
+[global]
+datadir = /home/hpc/pr94si/di73dez/multiscale-build-phase2/dune-multiscale/speedup_n7168_x_T1
+output_walltime = 1
+vtk_output = 0
+skip_error = 1
+[grids]
+macro_cells_per_dim = 96
+micro_cells_per_macrocell_dim = 12
+overlap = 1
+dim = 3
+[msfem]
+oversampling_layers = 0
+local_corrections_vtk_output = 0
+fem_comparison = 0
+local_solver = umfpack
+local_solver_verbose = 0
+coarse_solver = bicgstab.ilut
+[msfem.coarse_solver]
+verbose = 6
+max_iter = 40
+check = 0
+[problem]
+name = Synthetic
+[logging]
+level = 22
+file = ms.log
+dir = logdata
+[threading]
+max_count = 1
+partition_factor = 1

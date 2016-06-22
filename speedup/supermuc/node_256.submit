@@ -1,0 +1,36 @@
+#!/bin/bash
+##
+## optional: energy policy tags
+#@ energy_policy_tag = NONE
+# DO NOT USE environment = COPY_ALL
+#@ job_type = MPICH
+#@ class = general
+#@ node = 256
+#@ island_count=1
+# other example
+#@ tasks_per_node = 28
+#@ wall_clock_limit = 0:12:30
+##                    1 h 20 min 30 secs
+#@ job_name = speedup_x_256N_1C
+#@ network.MPI = sn_all,not_shared,us
+#@ initialdir = $(home)/multiscale-build-phase2/dune-multiscale
+#@ output = speedup_job_msfem_x_256N_1C_$(jobid).out
+#@ error = speedup_job_msfem_x_256N_1C_$(jobid).err
+#@ notification=always
+#@ notify_user=rene.milk@wwu.de
+#@ queue
+. /etc/profile
+. /etc/profile.d/modules.sh
+#setup of environment
+source $HOME/.modules
+#optional: 
+#module load mpi_pinning/hybrid_blocked
+
+BIN=$HOME/multiscale-build-phase2/dune-multiscale/elliptic_msfem
+
+
+OPT="$HOME/main_multiscale/experiments/speedup/supermuc/phase2.pure.ini -global.datadir $HOME/multiscale-build-phase2/dune-multiscale/aniso-spgrid_speedup_n7168_x_T1 "
+
+mpirun -n 7168 $BIN ${OPT}
+ERR=$(ll speedup_job_msfem_x_256N_1C_$(jobid).err)
+push_notify "${ERR} 7168"
