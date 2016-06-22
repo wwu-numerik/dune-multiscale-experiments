@@ -8,7 +8,7 @@ tpl_str='''#!/bin/bash
 #@ job_type = MPICH
 #@ class = {{ 'test' if nodes < 17 else 'general' }}
 #@ node = {{ nodes }}
-#@ island_count=1
+#@ island_count=1,1
 # other example
 #@ tasks_per_node = 28
 #@ wall_clock_limit = 0:12:30
