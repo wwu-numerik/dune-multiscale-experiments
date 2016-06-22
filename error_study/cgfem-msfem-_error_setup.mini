@@ -7,8 +7,8 @@ skip_error = 0
 error.over_integrate = 4
 
 [grids]
-macro_cells_per_dim = 8
-micro_cells_per_macrocell_dim = 8
+macro_cells_per_dim = 8, 16, 32 | expand
+micro_cells_per_macrocell_dim = 8, 16, 32 | expand
 overlap = 1
 
 [msfem]
@@ -28,13 +28,13 @@ coarse_solver = bicgstab.amg.ilu0
 
 [problem]
 name = "Synthetic"
-epsilon = 0.0625
+epsilon = 0.0625, 0.625, 0.00625 | expand
 
 [logging]
 # LOG_NONE = 1, LOG_ERR = 2, LOG_INFO = 4,LOG_DEBUG = 8,LOG_CONSOLE = 16,LOG_FILE = 32
 # # --> LOG_ERR | LOG_INFO | LOG_DEBUG | LOG_FILE = 46
 # # ANY odd number will disable ALL logging
-level = 54
+level = 22
 file = msfem.log
 
 # logging directory relative to datadir
