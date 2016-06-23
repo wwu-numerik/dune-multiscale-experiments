@@ -1,0 +1,29 @@
+[global]
+datadir = data_32_x_16_Ov_32_eps-1
+output_walltime = 1
+skip_error = 0
+vtk_output = 0
+[global.error]
+over_integrate = 4
+[grids]
+macro_cells_per_dim = 32
+micro_cells_per_macrocell_dim = 16
+overlap = 1
+dim = 2
+[logging]
+dir = logs
+file = msfem.log
+level = 22
+[msfem]
+coarse_solver = bicgstab.amg.ilu0
+fem_comparison = 1
+local_corrections_vtk_output = 0
+local_solver = umfpack
+local_solver_verbose = 0
+oversampling_layers = 32
+[problem]
+epsilon = 1
+name = Synthetic
+[threading]
+max_count = 1
+partition_factor = 1

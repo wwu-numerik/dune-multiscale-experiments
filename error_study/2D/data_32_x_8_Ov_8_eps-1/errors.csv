@@ -1,0 +1,2 @@
+coarse_fem_exact_H1s,coarse_fem_exact_L2,fem_exact_H1s,fem_exact_L2,msfem_L2,msfem_coarse_fem_H1s,msfem_coarse_fem_L2,msfem_exact_H1s,msfem_exact_L2,msfem_fem_H1s,msfem_fem_L2,
+0.311429,0.00233921,0.0389523,3.65629e-05,0.50922,0.100967,0.00440451,0.32835,0.00641039,0.326037,0.00638103,
